@@ -15,16 +15,16 @@
       <div class="opacity-80 bg-white rounded-xl shadow-lg p-6 mb-8 text-violet-700">
         <div class="grid lg:grid-cols-2 gap-12">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">输入类型</label>
+            <label class="block text-xl font-bold mb-4">输入类型</label>
             <div class="flex space-x-4">
               <button 
                 v-for="type in inputTypes" 
                 :key="type.value"
                 @click="inputType = type.value"
                 :class="[
-                  'px-4 py-2 rounded-md text-sm font-medium transition-colors',
+                  'px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none ',
                   inputType === type.value 
-                    ? 'bg-indigo-600 text-white' 
+                    ? 'bg-indigo-600 text-white border-4 border-violet-400' 
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 ]"
               >
@@ -34,16 +34,16 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">加密模式</label>
-            <div class="grid grid-cols-2 gap-2">
+            <label class="block text-xl font-bold mb-4">加密模式</label>
+            <div class="grid lg:grid-cols-2 gap-2">
               <button 
                 v-for="mode in encryptionModes" 
                 :key="mode.value"
                 @click="encryptionMode = mode.value"
                 :class="[
-                  'px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                  'px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none ',
                   encryptionMode === mode.value 
-                    ? 'bg-indigo-600 text-white' 
+                    ? 'bg-indigo-600 text-white border-4 border-violet-400' 
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 ]"
               >
@@ -54,34 +54,34 @@
         </div>
         <!-- 选择模式 -->
 
-        <div class="mt-6 space-y-4">
+        <div class="mt-6 space-y-4 tracking-widest">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              明文 <span class="text-xs text-gray-500">{{ inputPlaceholder }}</span>
+            <label class="block text-xl font-bold mb-2">
+              明文 <span class="text-xs text-amber-500">来试试看吧</span>
             </label>
             <input 
               type="text" 
               v-model="plaintext" 
               :placeholder="inputPlaceholder"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              密钥 <span class="text-xs text-gray-500">16位(单重)/32位(双重)/48位(三重)</span>
+            <label class="block text-xl font-bold mb-2">
+              密钥 <span class="text-xs text-amber-500">跟我玩阴滴是吧</span>
             </label>
             <input 
               type="text" 
               v-model="key" 
-              placeholder="输入密钥"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="输入密钥-16位(单重)/32位(双重)/48位(三重)"
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
 
           <div v-if="encryptionMode === 'cbc'">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              初始向量 (IV) <span class="text-xs text-gray-500">16位</span>
+            <label class="block text-xl font-bold mb-2">
+              初始向量 (IV) <span class="text-xs text-amber-500">16位</span>
             </label>
             <input 
               type="text" 
@@ -102,19 +102,19 @@
           </button>
           <button 
             @click="decryptData"
-            class="px-6 py-3 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+            class="px-6 py-3 bg-emerald-400 text-white font-medium rounded-md hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 transition-colors"
           >
             解密
           </button>
           <button 
             @click="clearAll"
-            class="px-6 py-3 bg-gray-600 text-white font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+            class="px-6 py-3 bg-pink-600 text-white font-medium rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-colors"
           >
             清空
           </button>
           <button 
             @click="runTestCases"
-            class="px-6 py-3 bg-purple-600 text-white font-medium rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
+            class="px-6 py-3 bg-sky-600 text-white font-medium rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors"
           >
             运行测试用例
           </button>
@@ -123,34 +123,34 @@
       </div>
 
       <!-- 结果区域 -->
-      <div class=" bg-white rounded-xl shadow-lg p-6 mb-8">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">加密解密结果</h2>
+      <div class="opacity-80 bg-white rounded-xl shadow-lg p-6 mb-8 text-violet-700">
+        <h2 class="text-xl font-bold mb-4">加密解密结果</h2>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="border border-gray-200 rounded-lg p-4">
-            <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
-              <span class="bg-indigo-100 text-indigo-800 rounded-full p-1 mr-2">
+        <div class="grid lg:grid-cols-2 gap-6">
+          <div class="border-4 border-violet-200 rounded-lg p-4">
+            <h3 class="text-lg font-bold mb-3 flex items-center">
+              <span class="bg-violet-100 text-violet-800 rounded-full p-1 mr-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                 </svg>
               </span>
               加密结果
             </h3>
-            <div class="bg-gray-50 p-4 rounded-md font-mono break-all min-h-[80px]">
+            <div class="bg-gray-50 p-4 rounded-md italic font-sans break-all min-h-[80px]">
               {{ ciphertext || '加密结果将显示在这里...' }}
             </div>
           </div>
           
-          <div class="border border-gray-200 rounded-lg p-4">
-            <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
-              <span class="bg-green-100 text-green-800 rounded-full p-1 mr-2">
+          <div class="border-4 border-violet-200 rounded-lg p-4">
+            <h3 class="text-lg font-bold mb-3 flex items-center">
+              <span class="bg-emerald-100 text-emerald-800 rounded-full p-1 mr-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
               </span>
               解密结果
             </h3>
-            <div class="bg-gray-50 p-4 rounded-md font-mono break-all min-h-[80px]">
+            <div class="bg-gray-50 p-4 rounded-md italic font-sans break-all min-h-[80px]">
               {{ decryptedText || '解密结果将显示在这里...' }}
             </div>
           </div>
@@ -158,7 +158,7 @@
       </div>
 
             <!-- 测试结果 -->
-      <!-- <div v-if="testResults.length > 0" class="bg-white rounded-xl shadow-lg p-6">
+      <div v-if="testResults.length > 0" class="bg-white rounded-xl shadow-lg p-6">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">测试结果</h2>
         
         <div class="space-y-3">
@@ -184,7 +184,7 @@
             </span>
           </div>
         </div>
-      </div> -->
+      </div>
 
       </div>
     </div>

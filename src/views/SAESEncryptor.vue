@@ -123,13 +123,11 @@
       </div>
 
       <!-- 结果区域 -->
-      <div class="relative opacity-80 bg-white rounded-xl shadow-lg p-6 mb-8 text-violet-700 tracking-widest">
-        <img src="../../public/poyi.jpg" alt="园丁破译ing" class="absolute bottom-2 left-2 w-48 border-2 border-violet-200" />
-        <img src="../../public/poyi.jpg" alt="园丁躺" class="absolute bottom-2 right-2 w-48 border-2 border-violet-200" />
+      <div class="opacity-80 bg-white rounded-xl min-w-120 shadow-lg p-6 mb-8 text-violet-700 tracking-widest">
         <h2 class="text-xl font-bold mb-4">加密解密结果</h2>
         
-        <div class="grid lg:grid-cols-2 gap-6">
-          <div class="border-4 border-violet-200 rounded-lg p-4">
+        <div class="grid grid-cols-2 grid-rows-2 gap-6">
+          <div class="border-4 border-violet-200 rounded-lg p-4 w-52 h-48">
             <h3 class="text-lg font-bold mb-3 flex items-center">
               <span class="bg-violet-100 text-violet-800 rounded-full p-1 mr-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -143,7 +141,7 @@
             </div>
           </div>
           
-          <div class="border-4 border-violet-200 rounded-lg p-4">
+          <div class="border-4 border-violet-200 rounded-lg p-4 w-52 h-48" >
             <h3 class="text-lg font-bold mb-3 flex items-center">
               <span class="bg-emerald-100 text-emerald-800 rounded-full p-1 mr-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -156,6 +154,15 @@
               {{ decryptedText || '解密结果将显示在这里...' }}
             </div>
           </div>
+
+          <div class="w-52 h-48 ">
+            <img src="../../public/poyi.jpg" alt="园丁破译ing" class="border-2 rounded-lg border-violet-200 w-full h-full object-cover" />
+          </div>
+          <div class="w-52 h-48 ">
+            <img src="../../public/lei.png" alt="园丁躺" class="border-2 rounded-lg border-violet-200 w-full h-full object-cover" />
+          </div>
+          
+          
         </div>
       </div>
 

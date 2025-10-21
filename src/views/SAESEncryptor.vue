@@ -123,7 +123,9 @@
       </div>
 
       <!-- 结果区域 -->
-      <div class="opacity-80 bg-white rounded-xl shadow-lg p-6 mb-8 text-violet-700">
+      <div class="relative opacity-80 bg-white rounded-xl shadow-lg p-6 mb-8 text-violet-700 tracking-widest">
+        <img src="../../public/poyi.jpg" alt="园丁破译ing" class="absolute bottom-2 left-2 w-48 border-2 border-violet-200" />
+        <img src="../../public/poyi.jpg" alt="园丁躺" class="absolute bottom-2 right-2 w-48 border-2 border-violet-200" />
         <h2 class="text-xl font-bold mb-4">加密解密结果</h2>
         
         <div class="grid lg:grid-cols-2 gap-6">

@@ -63,8 +63,18 @@
               type="text" 
               v-model="plaintext" 
               :placeholder="inputPlaceholder"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              @input="clearError('plaintext')"
+              :class="[
+                'w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2',
+                errors.plaintext ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+              ]"
             />
+            <div v-if="errors.plaintext" class="text-red-500 text-sm mt-1 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              {{ errors.plaintext }}
+            </div>
           </div>
 
           <div>
@@ -75,8 +85,18 @@
               type="text" 
               v-model="key" 
               placeholder="输入密钥-16位(单重)/32位(双重)/48位(三重)"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              @input="clearError('key')"
+              :class="[
+                'w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2',
+                errors.key ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+              ]"
             />
+            <div v-if="errors.key" class="text-red-500 text-sm mt-1 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              {{ errors.key }}
+            </div>
           </div>
 
           <div v-if="encryptionMode === 'cbc'">
@@ -87,8 +107,18 @@
               type="text" 
               v-model="iv" 
               placeholder="输入初始向量"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              @input="clearError('iv')"
+              :class="[
+                'w-full px-4 py-2 border rounded-md focus:ring-2',
+                errors.iv ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+              ]"
             />
+            <div v-if="errors.iv" class="text-red-500 text-sm mt-1 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              {{ errors.iv }}
+            </div>
           </div>
         </div>
         <!-- 输入板块 -->
@@ -96,25 +126,51 @@
         <div class="mt-6 flex flex-wrap gap-3">
           <button 
             @click="encryptData"
-            class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+            :disabled="processing"
+            :class="[
+              'px-6 py-3 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors',
+              processing 
+                ? 'bg-gray-400 text-gray-700 cursor-not-allowed' 
+                : 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500'
+            ]"
           >
-            加密
+            <span v-if="processing">处理中...</span>
+            <span v-else>加密</span>
           </button>
           <button 
             @click="decryptData"
-            class="px-6 py-3 bg-emerald-400 text-white font-medium rounded-md hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 transition-colors"
+            :disabled="processing"
+            :class="[
+              'px-6 py-3 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors',
+              processing 
+                ? 'bg-gray-400 text-gray-700 cursor-not-allowed' 
+                : 'bg-emerald-400 text-white hover:bg-emerald-500 focus:ring-emerald-300'
+            ]"
           >
-            解密
+            <span v-if="processing">处理中...</span>
+            <span v-else>解密</span>
           </button>
           <button 
             @click="clearAll"
-            class="px-6 py-3 bg-pink-600 text-white font-medium rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-colors"
+            :disabled="processing"
+            :class="[
+              'px-6 py-3 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors',
+              processing 
+                ? 'bg-gray-400 text-gray-700 cursor-not-allowed' 
+                : 'bg-pink-600 text-white hover:bg-pink-700 focus:ring-pink-500'
+            ]"
           >
             清空
           </button>
           <button 
             @click="runTestCases"
-            class="px-6 py-3 bg-sky-600 text-white font-medium rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors"
+            :disabled="processing"
+            :class="[
+              'px-6 py-3 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors',
+              processing 
+                ? 'bg-gray-400 text-gray-700 cursor-not-allowed' 
+                : 'bg-sky-600 text-white hover:bg-sky-700 focus:ring-sky-500'
+            ]"
           >
             运行测试用例
           </button>
@@ -144,7 +200,7 @@
           <div class="border-4 border-violet-200 rounded-lg p-4 w-52 h-48" >
             <h3 class="text-lg font-bold mb-3 flex items-center">
               <span class="bg-emerald-100 text-emerald-800 rounded-full p-1 mr-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="CurrentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
               </span>
@@ -161,12 +217,10 @@
           <div class="w-52 h-48 ">
             <img src="../../public/lei.png" alt="园丁躺" class="border-2 rounded-lg border-violet-200 w-full h-full object-cover" />
           </div>
-          
-          
         </div>
       </div>
 
-            <!-- 测试结果 -->
+      <!-- 测试结果 -->
       <div v-if="testResults.length > 0" class="bg-white rounded-xl shadow-lg p-6">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">测试结果</h2>
         
@@ -219,6 +273,12 @@ export default {
       ciphertext: '',
       decryptedText: '',
       testResults: [],
+      processing: false,
+      errors: {
+        plaintext: '',
+        key: '',
+        iv: ''
+      },
       inputTypes: [
         { value: 'binary', label: '二进制' },
         { value: 'hex', label: '十六进制' },
@@ -243,7 +303,74 @@ export default {
     }
   },
   methods: {
+    validateInput() {
+      let isValid = true;
+      
+      // 重置错误信息
+      this.errors = {
+        plaintext: '',
+        key: '',
+        iv: ''
+      };
+      
+      // 验证明文
+      if (!this.plaintext.trim()) {
+        this.errors.plaintext = '空手套白狼？';
+        isValid = false;
+      }
+      
+      // 验证密钥
+      if (!this.key.trim()) {
+        this.errors.key = '请输入密钥';
+        isValid = false;
+      } else {
+        // 根据加密模式验证密钥长度
+        const keyLength = this.key.length;
+        switch (this.encryptionMode) {
+          case 'single':
+            if (keyLength < 16) {
+              this.errors.key = '单重加密需要16位密钥';
+              isValid = false;
+            }
+            break;
+          case 'double':
+            if (keyLength < 32) {
+              this.errors.key = '双重加密需要32位密钥';
+              isValid = false;
+            }
+            break;
+          case 'triple':
+            if (keyLength < 48) {
+              this.errors.key = '三重加密需要48位密钥';
+              isValid = false;
+            }
+            break;
+        }
+      }
+      
+      // 验证初始向量（仅CBC模式）
+      if (this.encryptionMode === 'cbc' && !this.iv.trim()) {
+        this.errors.iv = 'CBC模式需要初始向量';
+        isValid = false;
+      }
+      
+      return isValid;
+    },
+    
+    clearError(field) {
+      if (this.errors[field]) {
+        this.errors[field] = '';
+      }
+    },
+    
     encryptData() {
+      if (!this.validateInput()) {
+        this.showError('请检查输入字段');
+        return;
+      }
+      
+      this.processing = true;
+      
       try {
         const inputData = convertInput(this.plaintext, this.inputType);
         const keyData = convertInput(this.key, this.inputType);
@@ -278,10 +405,19 @@ export default {
         this.ciphertext = formatOutput(result, this.inputType);
       } catch (error) {
         this.showError(`加密错误: ${error.message}`);
+      } finally {
+        this.processing = false;
       }
     },
     
     decryptData() {
+      if (!this.validateInput()) {
+        this.showError('请检查输入字段');
+        return;
+      }
+      
+      this.processing = true;
+      
       try {
         const inputData = convertInput(this.ciphertext, this.inputType);
         const keyData = convertInput(this.key, this.inputType);
@@ -314,6 +450,8 @@ export default {
         this.decryptedText = formatOutput(result, this.inputType);
       } catch (error) {
         this.showError(`解密错误: ${error.message}`);
+      } finally {
+        this.processing = false;
       }
     },
     
@@ -377,6 +515,11 @@ export default {
       this.ciphertext = '';
       this.decryptedText = '';
       this.testResults = [];
+      this.errors = {
+        plaintext: '',
+        key: '',
+        iv: ''
+      };
     },
     
     runTestCases() {

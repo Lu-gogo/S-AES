@@ -1,14 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-10">
-        <h1 class="text-4xl font-bold text-indigo-800 mb-3">S-AES加密算法实现</h1>
-        <p class="text-lg text-gray-600">基于Vue和TailwindCSS构建的简化AES加密工具</p>
-      </div>
+  <div class="relative isolated ">
+    <img src="../../public/BLK.png" alt="背景图" class="inset-0 absolute -z-10 " />
+    <!-- 背景图 -->
 
+    <div class="absolute top-20 left-1/2 -translate-x-1/2 w-full ">
+    <div class=" z-10 text-center mb-40">
+      <h1 class="text-6xl font-bold text-amber-600 mb-10">你为什么不来试试S-AES加密算法呢</h1>
+      <p class="text-2xl text-pink-700">当然是选择Vue和TailwindCSS来构建的简化AES加密工具啦</p>
+    </div>
+    <!-- 标题文字区域 -->
+
+    <div class="w-full flex justify-evenly ">
       <!-- 输入区域 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="opacity-80 bg-white rounded-xl shadow-lg p-6 mb-8 text-violet-700">
+        <div class="grid lg:grid-cols-2 gap-12">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">输入类型</label>
             <div class="flex space-x-4">
@@ -47,6 +52,7 @@
             </div>
           </div>
         </div>
+        <!-- 选择模式 -->
 
         <div class="mt-6 space-y-4">
           <div>
@@ -85,6 +91,7 @@
             />
           </div>
         </div>
+        <!-- 输入板块 -->
 
         <div class="mt-6 flex flex-wrap gap-3">
           <button 
@@ -112,10 +119,11 @@
             运行测试用例
           </button>
         </div>
+        <!-- 运行模块间 -->
       </div>
 
       <!-- 结果区域 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <div class=" bg-white rounded-xl shadow-lg p-6 mb-8">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">加密解密结果</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -149,8 +157,8 @@
         </div>
       </div>
 
-      <!-- 测试结果 -->
-      <div v-if="testResults.length > 0" class="bg-white rounded-xl shadow-lg p-6">
+            <!-- 测试结果 -->
+      <!-- <div v-if="testResults.length > 0" class="bg-white rounded-xl shadow-lg p-6">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">测试结果</h2>
         
         <div class="space-y-3">
@@ -176,9 +184,12 @@
             </span>
           </div>
         </div>
+      </div> -->
+
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>

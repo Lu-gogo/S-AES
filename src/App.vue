@@ -1,5 +1,5 @@
 <script setup>
-import SAESEncryptor from './components/SAESEncryptor.vue'
+import SAESEncryptor from './views/SAESEncryptor.vue'
 </script>
 
 

@@ -3,55 +3,63 @@ import { doubleEncrypt, doubleDecrypt } from './modes';
 import { convertInput, formatOutput } from './utils';
 
 // 运行所有测试用例
+// 修改 runAllTests 函数，确保返回测试结果
 export function runAllTests() {
   const results = [];
 
-  // 测试1: 基本加密解密
-  const test1Pass = runBasicTest();
-  results.push({
-    pass: test1Pass,
-    message: test1Pass
-      ? '基本测试通过: 加密解密功能正常'
-      : '基本测试失败: 加密解密功能异常'
-  });
+  try {
+    // 测试1: 基本加密解密
+    const test1Pass = runBasicTest();
+    results.push({
+      pass: test1Pass,
+      message: test1Pass
+        ? '基本测试通过: 加密解密功能正常'
+        : '基本测试失败: 加密解密功能异常'
+    });
 
-  // 测试2: 交叉测试
-  const test2Pass = runCrossTest();
-  results.push({
-    pass: test2Pass,
-    message: test2Pass
-      ? '交叉测试通过: 算法标准一致'
-      : '交叉测试失败: 算法实现不一致'
-  });
+    // 测试2: 交叉测试
+    const test2Pass = runCrossTest();
+    results.push({
+      pass: test2Pass,
+      message: test2Pass
+        ? '交叉测试通过: 算法标准一致'
+        : '交叉测试失败: 算法实现不一致'
+    });
 
-  // 测试3: ASCII支持
-  const test3Pass = runAsciiTest();
-  results.push({
-    pass: test3Pass,
-    message: test3Pass
-      ? 'ASCII测试通过: 支持ASCII输入输出'
-      : 'ASCII测试失败: ASCII处理异常'
-  });
+    // 测试3: ASCII支持
+    const test3Pass = runAsciiTest();
+    results.push({
+      pass: test3Pass,
+      message: test3Pass
+        ? 'ASCII测试通过: 支持ASCII输入输出'
+        : 'ASCII测试失败: ASCII处理异常'
+    });
 
-  // 测试4: 双重加密
-  const test4Pass = runDoubleEncryptionTest();
-  results.push({
-    pass: test4Pass,
-    message: test4Pass
-      ? '双重加密测试通过'
-      : '双重加密测试失败'
-  });
+    // 测试4: 双重加密
+    const test4Pass = runDoubleEncryptionTest();
+    results.push({
+      pass: test4Pass,
+      message: test4Pass
+        ? '双重加密测试通过'
+        : '双重加密测试失败'
+    });
 
-  // 测试5: CBC模式
-  const test5Pass = runCBCTest();
-  results.push({
-    pass: test5Pass,
-    message: test5Pass
-      ? 'CBC模式测试通过'
-      : 'CBC模式测试失败'
-  });
+    // 测试5: CBC模式
+    const test5Pass = runCBCTest();
+    results.push({
+      pass: test5Pass,
+      message: test5Pass
+        ? 'CBC模式测试通过'
+        : 'CBC模式测试失败'
+    });
+  } catch (error) {
+    results.push({
+      pass: false,
+      message: `测试执行出错: ${error.message}`
+    });
+  }
 
-  return results;
+  return results; // 确保返回结果数组
 }
 
 // 基本加密解密测试

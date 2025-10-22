@@ -303,59 +303,96 @@ export default {
     }
   },
   methods: {
-    validateInput() {
-      let isValid = true;
-      
-      // 重置错误信息
-      this.errors = {
-        plaintext: '',
-        key: '',
-        iv: ''
-      };
-      
-      // 验证明文
-      if (!this.plaintext.trim()) {
-        this.errors.plaintext = '空手套白狼？';
-        isValid = false;
+    // 修复密钥长度验证逻辑
+validateInput(skipPlaintext = false) {
+  let isValid = true;
+  
+  // 重置错误信息
+  this.errors = {
+    plaintext: '',
+    key: '',
+    iv: ''
+  };
+  
+  // 验证明文（除非跳过）
+  if (!skipPlaintext && !this.plaintext.trim()) {
+    this.errors.plaintext = '空手套白狼？';
+    isValid = false;
+  }
+  
+  // 验证密钥
+  if (!this.key.trim()) {
+    this.errors.key = '请输入密钥';
+    isValid = false;
+  } else {
+    // 根据加密模式和输入类型验证密钥长度
+    const keyLength = this.key.length;
+    let requiredLength = 0;
+    let requiredBits = 0;
+    
+    switch (this.encryptionMode) {
+      case 'single':
+        requiredBits = 16;
+        break;
+      case 'double':
+        requiredBits = 32;
+        break;
+      case 'triple':
+        requiredBits = 48;
+        break;
+      case 'cbc':
+        requiredBits = 16;
+        break;
+    }
+    
+    // 根据输入类型计算所需字符长度
+    switch (this.inputType) {
+      case 'binary':
+        requiredLength = requiredBits;
+        break;
+      case 'hex':
+        requiredLength = requiredBits / 4;
+        break;
+      case 'ascii':
+        requiredLength = requiredBits / 8;
+        break;
+    }
+    
+    if (keyLength < requiredLength) {
+      this.errors.key = `${this.encryptionMode}需要${requiredLength}位${this.inputType}密钥`;
+      isValid = false;
+    }
+  }
+  
+  // 验证初始向量（仅CBC模式）
+  if (this.encryptionMode === 'cbc') {
+    if (!this.iv.trim()) {
+      this.errors.iv = 'CBC模式需要初始向量';
+      isValid = false;
+    } else {
+      // 根据输入类型验证IV长度
+      let requiredIVLength = 0;
+      switch (this.inputType) {
+        case 'binary':
+          requiredIVLength = 16;
+          break;
+        case 'hex':
+          requiredIVLength = 4;
+          break;
+        case 'ascii':
+          requiredIVLength = 2;
+          break;
       }
       
-      // 验证密钥
-      if (!this.key.trim()) {
-        this.errors.key = '请输入密钥';
-        isValid = false;
-      } else {
-        // 根据加密模式验证密钥长度
-        const keyLength = this.key.length;
-        switch (this.encryptionMode) {
-          case 'single':
-            if (keyLength < 16) {
-              this.errors.key = '单重加密需要16位密钥';
-              isValid = false;
-            }
-            break;
-          case 'double':
-            if (keyLength < 32) {
-              this.errors.key = '双重加密需要32位密钥';
-              isValid = false;
-            }
-            break;
-          case 'triple':
-            if (keyLength < 48) {
-              this.errors.key = '三重加密需要48位密钥';
-              isValid = false;
-            }
-            break;
-        }
-      }
-      
-      // 验证初始向量（仅CBC模式）
-      if (this.encryptionMode === 'cbc' && !this.iv.trim()) {
-        this.errors.iv = 'CBC模式需要初始向量';
+      if (this.iv.length < requiredIVLength) {
+        this.errors.iv = `初始向量需要${requiredIVLength}位${this.inputType}`;
         isValid = false;
       }
-      
-      return isValid;
-    },
+    }
+  }
+  
+  return isValid;
+},
     
     clearError(field) {
       if (this.errors[field]) {
@@ -410,50 +447,51 @@ export default {
       }
     },
     
-    decryptData() {
-      if (!this.validateInput()) {
-        this.showError('请检查输入字段');
-        return;
-      }
-      
-      this.processing = true;
-      
-      try {
-        const inputData = convertInput(this.ciphertext, this.inputType);
-        const keyData = convertInput(this.key, this.inputType);
-        
-        let result;
-        
-        switch (this.encryptionMode) {
-          case 'single':
-            result = decrypt(inputData, keyData);
-            break;
-          case 'double':
-            const doubleKey = keyData.concat(convertInput('0'.repeat(16), 'binary'));
-            result = doubleDecrypt(inputData, doubleKey);
-            break;
-          case 'triple':
-            const tripleKey = keyData.concat(
-              convertInput('0'.repeat(16), 'binary'), 
-              convertInput('0'.repeat(16), 'binary')
-            );
-            result = tripleDecrypt(inputData, tripleKey);
-            break;
-          case 'cbc':
-            const ivData = convertInput(this.iv, this.inputType);
-            result = this.cbcDecrypt(inputData, keyData, ivData);
-            break;
-          default:
-            result = decrypt(inputData, keyData);
-        }
-        
-        this.decryptedText = formatOutput(result, this.inputType);
-      } catch (error) {
-        this.showError(`解密错误: ${error.message}`);
-      } finally {
-        this.processing = false;
-      }
-    },
+     // 修改解密方法，跳过明文验证
+decryptData() {
+  if (!this.validateInput(true)) { // 跳过明文验证
+    this.showError('请检查输入字段');
+    return;
+  }
+  
+  this.processing = true;
+  
+  try {
+    const inputData = convertInput(this.ciphertext, this.inputType);
+    const keyData = convertInput(this.key, this.inputType);
+    
+    let result;
+    
+    switch (this.encryptionMode) {
+      case 'single':
+        result = decrypt(inputData, keyData);
+        break;
+      case 'double':
+        const doubleKey = keyData.concat(convertInput('0'.repeat(16), 'binary'));
+        result = doubleDecrypt(inputData, doubleKey);
+        break;
+      case 'triple':
+        const tripleKey = keyData.concat(
+          convertInput('0'.repeat(16), 'binary'), 
+          convertInput('0'.repeat(16), 'binary')
+        );
+        result = tripleDecrypt(inputData, tripleKey);
+        break;
+      case 'cbc':
+        const ivData = convertInput(this.iv, this.inputType);
+        result = this.cbcDecrypt(inputData, keyData, ivData);
+        break;
+      default:
+        result = decrypt(inputData, keyData);
+    }
+    
+    this.decryptedText = formatOutput(result, this.inputType);
+  } catch (error) {
+    this.showError(`解密错误: ${error.message}`);
+  } finally {
+    this.processing = false;
+  }
+},
     
     cbcEncrypt(plaintext, key, iv) {
       // CBC模式加密实现
